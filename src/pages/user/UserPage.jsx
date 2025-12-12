@@ -83,7 +83,7 @@ const UserPage = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3001/api/auth/verify-2fa-code",
+        `${import.meta.env.VITE_API_URL}/api/auth/verify-2fa-code`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

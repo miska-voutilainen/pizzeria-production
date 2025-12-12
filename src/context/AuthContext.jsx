@@ -15,9 +15,12 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const res = await fetch("http://localhost:3001/api/auth/check", {
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/check`,
+        {
+          credentials: "include",
+        }
+      );
 
       if (res.ok) {
         const data = await res.json();

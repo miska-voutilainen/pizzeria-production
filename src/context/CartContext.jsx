@@ -118,7 +118,7 @@ export const CartProvider = ({ children }) => {
   const applyCoupon = async (couponCode) => {
     try {
       const response = await fetch(
-        "http://localhost:3001/api/newsletter/validate-coupon",
+        `${import.meta.env.VITE_API_URL}/api/newsletter/validate-coupon`,
         {
           method: "POST",
           headers: {
