@@ -7,7 +7,9 @@ import TextButton from "../../components/ui/TextButton/TextButton";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+
 import { Modal } from "../../components/Modal/Modal/Modal";
+import useLanguage from "../../context/useLanguage.jsx";
 
 // Import payment method images
 import mobilepayImg from "../../assets/images/paymentMethods/MobilePay_logo.svg";
@@ -17,6 +19,7 @@ import klarnaImg from "../../assets/images/paymentMethods/Klarna_Payment_Badge.s
 import cardImg from "../../assets/images/paymentMethods/visa-and-mastercard-logos.svg";
 import RadioButton from "../../components/ui/RadioButton/RadioButton";
 import CheckoutNavigationBar from "../../components/layout/Navigation/CheckoutNavigationBar/CheckoutNavigationBar";
+import pizzaIMG from "../../assets/images/make-your-own-pizza.png";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -32,6 +35,7 @@ const Checkout = () => {
     city: "",
   });
   const { user } = useAuth();
+  const { t } = useLanguage();
   const {
     cartItems,
     getCartTotal,
@@ -80,7 +84,7 @@ const Checkout = () => {
     // Validate required fields
     if (!formData.name || !formData.phone) {
       console.log("Validation failed: missing name or phone");
-      alert("Please fill in name and phone number");
+      alert(t("checkout.errMissingNamePhone"));
       return;
     }
 
@@ -89,7 +93,7 @@ const Checkout = () => {
       (!formData.address || !formData.postcode || !formData.city)
     ) {
       console.log("Validation failed: missing delivery address fields");
-      alert("Please fill in all delivery address fields");
+      alert(t("checkout.errMissingDeliveryAddress"));
       return;
     }
 
@@ -186,11 +190,14 @@ const Checkout = () => {
         }, 500);
       } else {
         console.log("Order failed:", result.error);
-        alert("Error creating order: " + (result.error || "Unknown error"));
+        alert(
+          t("checkout.errCreateOrder") +
+            (result.error ? ": " + result.error : "")
+        );
       }
     } catch (error) {
       console.error("Error placing order:", error);
-      alert("Error placing order. Please try again.");
+      alert(t("checkout.errPlaceOrder"));
     }
   };
 
@@ -200,7 +207,7 @@ const Checkout = () => {
       <section id="checkout-section">
         <div className="checkout-section-wrapper">
           <div className="checkout-input-col">
-            <h1>Checkout</h1>
+            <h1>{t("checkout.title")}</h1>
             <div className="checkout-category-tabs-container">
               <div className="category-tabs">
                 {/* <button
@@ -210,12 +217,12 @@ const Checkout = () => {
                     Delivery
                   </button> */}
                 <RadioButton
-                  text={"Delivery"}
+                  text={t("checkout.delivery")}
                   onClick={() => setDeliveryType("delivery")}
                   active={deliveryType === "delivery"}
                 />
                 <RadioButton
-                  text={"Take-away"}
+                  text={t("checkout.takeaway")}
                   onClick={() => setDeliveryType("takeaway")}
                   active={deliveryType === "takeaway"}
                 />
@@ -229,23 +236,23 @@ const Checkout = () => {
             </div>
             <div className="checkout-inputs">
               <div className="checkout-input-row">
-                <label htmlFor="name">Name</label>
+                <label htmlFor="name">{t("checkout.name")}</label>
                 <InputField
                   type="text"
                   name={"name"}
                   id={"name"}
-                  placeholder="John Doe"
+                  placeholder={t("checkout.namePlaceholder")}
                   value={formData.name}
                   onChange={handleFormChange("name")}
                 />
               </div>
               <div className="checkout-input-row">
-                <label htmlFor="phone">Phone number</label>
+                <label htmlFor="phone">{t("checkout.phone")}</label>
                 <InputField
                   type="tel"
                   name={"phone"}
                   id={"phone"}
-                  placeholder="Phone number"
+                  placeholder={t("checkout.phonePlaceholder")}
                   value={formData.phone}
                   onChange={handleFormChange("phone")}
                 />
@@ -253,34 +260,34 @@ const Checkout = () => {
               {deliveryType === "delivery" && (
                 <>
                   <div className="checkout-input-row">
-                    <label htmlFor="address">Delivery address</label>
+                    <label htmlFor="address">{t("checkout.address")}</label>
                     <InputField
                       type="text"
                       name={"address"}
                       id={"address"}
-                      placeholder="Delivery address"
+                      placeholder={t("checkout.addressPlaceholder")}
                       value={formData.address}
                       onChange={handleFormChange("address")}
                     />
                   </div>
                   <div className="checkout-input-row">
-                    <label htmlFor="postcode">Postal code</label>
+                    <label htmlFor="postcode">{t("checkout.postcode")}</label>
                     <InputField
                       type="text"
                       name={"postcode"}
                       id={"postcode"}
-                      placeholder="Postal code"
+                      placeholder={t("checkout.postcodePlaceholder")}
                       value={formData.postcode}
                       onChange={handleFormChange("postcode")}
                     />
                   </div>
                   <div className="checkout-input-row">
-                    <label htmlFor="city">City</label>
+                    <label htmlFor="city">{t("checkout.city")}</label>
                     <InputField
                       type="text"
                       name={"city"}
                       id={"city"}
-                      placeholder="City"
+                      placeholder={t("checkout.cityPlaceholder")}
                       value={formData.city}
                       onChange={handleFormChange("city")}
                     />
@@ -289,38 +296,40 @@ const Checkout = () => {
               )}
               {deliveryType === "takeaway" && (
                 <div className="checkout-input-row">
-                  <label htmlFor="pizzeria-address">Pizzeria address</label>
+                  <label htmlFor="pizzeria-address">
+                    {t("checkout.pizzeriaAddress")}
+                  </label>
                   <InputField
                     type="text"
                     name={"pizzeria-address"}
                     id={"pizzeria-address"}
-                    placeholder="Pizzeria address"
-                    value="Kauppakatu 123, 00100 Helsinki"
+                    placeholder={t("checkout.pizzeriaAddressPlaceholder")}
+                    value={t("checkout.pizzeriaAddressValue")}
                     readOnly
                   />
                 </div>
               )}
               {deliveryType !== "delivery" && (
-                <TextButton text={"Select pizzeria"} />
+                <TextButton text={t("checkout.selectPizzeria")} />
               )}
               <div className="checkout-inputs-user-sign-in">
                 {!user && (
                   <TextButton
-                    text={"Sign in or create an account"}
+                    text={t("checkout.signInOrCreate")}
                     onClick={() => setModalWindow("SignIn")}
                   />
                 )}
               </div>
             </div>
             <div className="promocode-container">
-              <h2>Coupon code</h2>
+              <h2>{t("checkout.couponTitle")}</h2>
               <form onSubmit={handleApplyCoupon}>
                 <InputSubmit
-                  placeholder={"Enter discount code"}
+                  placeholder={t("checkout.couponPlaceholder")}
                   type={"text"}
                   id={"email"}
                   name={"email"}
-                  submitText={"Apply"}
+                  submitText={t("checkout.apply")}
                   appearance={"light"}
                   value={couponInput}
                   setValue={setCouponInput}
@@ -330,7 +339,7 @@ const Checkout = () => {
             </div>
             <div className="checkout-payment-methods-container">
               <div className="checkout-payment-methods-container-wrapper">
-                <h2>Payment methods</h2>
+                <h2>{t("checkout.paymentMethods")}</h2>
                 <form className="checkout-payment-method-form">
                   <label>
                     <input
@@ -341,7 +350,7 @@ const Checkout = () => {
                       onChange={(e) => setPaymentMethod(e.target.value)}
                     />
                     <img src={mobilepayImg} alt="MobilePay" />
-                    MobilePay
+                    {t("payment.mobilepay")}
                   </label>
 
                   <label>
@@ -353,7 +362,7 @@ const Checkout = () => {
                       onChange={(e) => setPaymentMethod(e.target.value)}
                     />
                     <img src={applepayImg} alt="Apple Pay" />
-                    Apple Pay
+                    {t("payment.applepay")}
                   </label>
 
                   <label>
@@ -365,7 +374,7 @@ const Checkout = () => {
                       onChange={(e) => setPaymentMethod(e.target.value)}
                     />
                     <img src={googlepayImg} alt="Google Pay" />
-                    Google Pay
+                    {t("payment.googlepay")}
                   </label>
 
                   <label>
@@ -377,7 +386,7 @@ const Checkout = () => {
                       onChange={(e) => setPaymentMethod(e.target.value)}
                     />
                     <img src={klarnaImg} alt="Klarna" />
-                    Klarna
+                    {t("payment.klarna")}
                   </label>
 
                   <label>
@@ -389,7 +398,7 @@ const Checkout = () => {
                       onChange={(e) => setPaymentMethod(e.target.value)}
                     />
                     <img src={cardImg} alt="Credit/Debit Card" />
-                    Credit/Debit Card
+                    {t("payment.card")}
                   </label>
                 </form>
               </div>
@@ -398,7 +407,7 @@ const Checkout = () => {
             <div className="checkout-pay-now-container">
               <Button
                 onClick={handlePlaceOrder}
-                text={"Place Order"}
+                text={t("checkout.placeOrder")}
                 id={"place-order-button"}
               />
             </div>
@@ -407,13 +416,13 @@ const Checkout = () => {
           <div className="checkout-orders-col">
             <div className="checkout-orders-wrapper">
               <div className="checkout-orders-top-col">
-                <h2>Order Items</h2>
+                <h2>{t("checkout.orderItems")}</h2>
 
                 <div className="checkout-order-items">
                   {cartItems.map((item) => (
                     <div key={item.slug} className="checkout-order-item">
                       <div className="checkout-order-item-img-container">
-                        <img src={item.imgUrl} alt={item.name} />
+                        <img src={item.imgUrl || pizzaIMG} alt={item.name} />
                       </div>
                       <div className="checkout-order-item-details">
                         <div>
@@ -425,7 +434,7 @@ const Checkout = () => {
                             {(item.price * item.quantity).toFixed(2)} €
                           </p>
                           <p className="checkout-order-item-details-qty">
-                            Qty: {item.quantity}
+                            {t("checkout.qty")}: {item.quantity}
                           </p>
                         </div>
                       </div>
@@ -443,7 +452,7 @@ const Checkout = () => {
                           (total, item) => total + item.quantity,
                           0
                         )}{" "}
-                        items
+                        {t("checkout.items")}
                       </span>
                       <span>{getCartTotal().toFixed(2)} €</span>
                     </p>
@@ -451,7 +460,9 @@ const Checkout = () => {
                   {coupon && couponPercentage > 0 && (
                     <div className="checkout-orders-footer-text-item">
                       <p>
-                        <span>Discount ({couponPercentage}%)</span>
+                        <span>
+                          {t("checkout.discount")} ({couponPercentage}%)
+                        </span>
                         <span>
                           -
                           {((getCartTotal() * couponPercentage) / 100).toFixed(
@@ -464,12 +475,13 @@ const Checkout = () => {
                   )}
                   <div className="checkout-orders-footer-text-item">
                     <p>
-                      <span>Delivery</span> <span>Free</span>
+                      <span>{t("checkout.deliveryLabel")}</span>{" "}
+                      <span>{t("checkout.deliveryFree")}</span>
                     </p>
                   </div>
                   <div className="checkout-orders-footer-text-item">
                     <h3>
-                      <span>Order summary</span>
+                      <span>{t("checkout.orderSummary")}</span>
                       <span>
                         {(coupon && couponPercentage > 0
                           ? getDiscountedTotal()
