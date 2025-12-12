@@ -46,12 +46,14 @@ const Footer = () => {
           </nav>
         </div>
 
-        {/* Temporary button to open MapModal */}
+        {/* Temporary button to open MapModal 
         <div className="footer-map-button-container">
           <button className="temporary-map-button" onClick={openMap}>
             {t("footer.openMap")}
           </button>
-        </div>
+        </div> 
+        
+        */}
 
         <div className="footer-copyright">
           <small>{t("footer.copyright")}</small>
