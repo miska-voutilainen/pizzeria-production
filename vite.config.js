@@ -7,7 +7,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       "/api": {
-        target: "https://pizzeria-api-2.azurewebsites.net",
+        target: "https://pizzeria-api.azurewebsites.net",
         changeOrigin: true,
         secure: false,
         configure: (proxy) => {
