@@ -136,18 +136,21 @@ export const CartProvider = ({ children }) => {
 
         // Log coupon usage to database
         try {
-          await fetch("http://localhost:3001/api/newsletter/log-coupon", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              coupon: couponCode,
-              cartTotal: cartTotal.toFixed(2),
-              discountAmount: discountAmount.toFixed(2),
-              email: null, // Add email if user is logged in
-            }),
-          });
+          await fetch(
+            `${import.meta.env.VITE_API_URL}/api/newsletter/log-coupon`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                coupon: couponCode,
+                cartTotal: cartTotal.toFixed(2),
+                discountAmount: discountAmount.toFixed(2),
+                email: null, // Add email if user is logged in
+              }),
+            }
+          );
         } catch (logError) {
           console.error("Error logging coupon usage:", logError);
           // Don't prevent coupon application if logging fails

@@ -113,7 +113,7 @@ const UserPage = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3001/api/auth/disable-2fa-with-code",
+        `${import.meta.env.VITE_API_URL}/api/auth/disable-2fa-with-code`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -141,7 +141,7 @@ const UserPage = () => {
     setLoading2FA(true);
     try {
       const response = await fetch(
-        "http://localhost:3001/api/auth/send-verify-link",
+        `${import.meta.env.VITE_API_URL}/api/auth/send-verify-link`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -168,7 +168,7 @@ const UserPage = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3001/api/auth/update-address",
+        `${import.meta.env.VITE_API_URL}/api/auth/update-address`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -198,7 +198,7 @@ const UserPage = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3001/api/auth/update-name",
+        `${import.meta.env.VITE_API_URL}/api/auth/update-name`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -257,10 +257,13 @@ const UserPage = () => {
                   onClick={async () => {
                     if (!confirm("Are you sure you want to log out?")) return;
                     try {
-                      await fetch("http://localhost:3001/api/auth/logout", {
-                        method: "POST",
-                        credentials: "include",
-                      });
+                      await fetch(
+                        `${import.meta.env.VITE_API_URL}/api/auth/logout`,
+                        {
+                          method: "POST",
+                          credentials: "include",
+                        }
+                      );
                     } catch (err) {
                       console.error("Logout error:", err);
                     }
